@@ -13,16 +13,23 @@
     <span
       class="header__count"
       aria-label="Количество товаров"
-    >3</span>
+    >{{ getBasketAmount || 0 }}</span>
   </a>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   setup() {
+    const store = useStore();
 
+    const basketAmount = store.getters.getBasketAmount;
+
+    return {
+      basketAmount,
+    };
   },
 });
 </script>

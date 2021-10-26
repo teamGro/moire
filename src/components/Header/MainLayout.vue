@@ -38,3 +38,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="less">
+.header__info {
+  text-align: left;
+}
+</style>

@@ -5,8 +5,12 @@ import url from '@/helpers/apiURL';
 export default createStore({
   state: {
     accessKey: null,
+    basket: [],
   },
   getters: {
+    getBasketAmount(state) {
+      return state.basket.length;
+    },
   },
   mutations: {
     setAccessKey(state, key) {
