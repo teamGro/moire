@@ -157,49 +157,9 @@
     </svg>
   </div>
 
-  <header class="header container">
-    <div class="header__wrapper">
-      <span class="header__info">Каталог</span>
+  <Header />
 
-      <a
-        class="header__logo"
-        href="#"
-      >
-        <img
-          src="img/svg/logo-moire.svg"
-          alt="Логотип интернет магазина Moire"
-          width="116"
-          height="34"
-        >
-      </a>
-
-      <a
-        class="header__tel"
-        href="tel:8 800 600 90 09"
-      >
-        8 800 600 90 09
-      </a>
-
-      <a
-        class="header__cart"
-        href="cart.html"
-        aria-label="Корзина с товарами"
-      >
-        <svg
-          width="19"
-          height="24"
-        >
-          <use xlink:href="#icon-cart"></use>
-        </svg>
-        <span
-          class="header__count"
-          aria-label="Количество товаров"
-        >3</span>
-      </a>
-    </div>
-  </header>
-
-  <main class="content container">
+  <!-- <main class="content container">
     <div class="content__top">
 
       <div class="content__row">
@@ -1442,8 +1402,27 @@
         © 2020 Moire
       </span>
     </div>
-  </footer>
+  </footer> -->
 </template>
+
+<script>
+import { defineComponent } from 'vue';
+import { useStore } from 'vuex';
+import Header from '@/components/Header/MainLayout.vue';
+
+export default defineComponent({
+  components: { Header },
+  setup() {
+    const store = useStore();
+
+    if (localStorage.getItem('accessKey')) {
+      store.commit('setAccessKey', localStorage.getItem('accessKey'));
+    } else {
+      store.dispatch('getAccessKey');
+    }
+  },
+});
+</script>
 
 <style lang="less">
 #app {
