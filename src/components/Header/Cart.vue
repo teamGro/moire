@@ -25,6 +25,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
+    store.dispatch('getBasketAmount');
     const basketAmount = store.getters.getBasketAmount;
 
     return {
