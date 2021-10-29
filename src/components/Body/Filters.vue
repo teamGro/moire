@@ -37,6 +37,11 @@
         </label>
       </fieldset>
 
+      <color-filter
+        title="Цвет"
+        :colors="colors"
+      ></color-filter>
+
       <base-filter-select
         title='Материал'
         :elements="materials"
@@ -67,22 +72,31 @@
 import { defineComponent, reactive, computed } from 'vue';
 import { useStore } from 'vuex';
 import BaseFilterInput from '@/components/Body/BaseFilterInput.vue';
-import BaseFilterSelect from './BaseFilterSelect.vue';
+import BaseFilterSelect from '@/components/Body/BaseFilterSelect.vue';
+import ColorFilter from '@/components/Body/ColorFilter.vue';
 
 export default defineComponent({
-  components: { BaseFilterInput, BaseFilterSelect },
+  components: { BaseFilterInput, BaseFilterSelect, ColorFilter },
   setup() {
     const store = useStore();
     const filtersData = reactive({});
 
     store.dispatch('getMaterials');
     store.dispatch('getSeasons');
+    store.dispatch('getColors');
 
     return {
       filtersData,
       seasons: computed(() => store.state.seasons) || [],
       materials: computed(() => store.state.materials) || [],
+      colors: computed(() => store.state.colors || []),
     };
   },
 });
 </script>
+
+.<style lang="less">
+.form__select {
+  background-color: #fafafa;
+}
+</style>

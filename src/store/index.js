@@ -9,16 +9,26 @@ export default createStore({
       id: null,
       items: [],
     },
-    productsQuantity: null,
+    products: [],
     seasons: [],
     materials: [],
+    colors: [],
   },
   getters: {
     getBasketAmount(state) {
       return state.basket.items.length;
     },
     getProductsQty(state) {
-      return state.productsQuantity;
+      return state.products.length;
+    },
+    getProducts(state) {
+      return state.products.map((product) => ({
+        ...product,
+        image: product.colors[0],
+      }));
+    },
+    getColors(state) {
+      return state.colors;
     },
   },
   mutations: {
@@ -33,8 +43,8 @@ export default createStore({
         state.basket.id = data.id;
       }
     },
-    setProductsQuantity(state, qty) {
-      state.productsQuantity = qty;
+    setProducts(state, qty) {
+      state.products = qty;
     },
     setMaterials(state, materials) {
       state.materials = materials.map((item) => ({
@@ -44,6 +54,9 @@ export default createStore({
     },
     setSeasons(state, seasons) {
       state.seasons = seasons;
+    },
+    setColors(state, colors) {
+      state.colors = colors;
     },
   },
   actions: {
@@ -56,9 +69,9 @@ export default createStore({
       const response = await axios.get(`${url.urlPart}baskets?userAccessKey=${state.accessKey}`);
       commit('updateBasketAmount', response.data);
     },
-    getProductsQuantity: async ({ commit }) => {
+    getProducts: async ({ commit }) => {
       const response = await axios.get(`${url.urlPart}products`);
-      commit('setProductsQuantity', response.data.items.length);
+      commit('setProducts', response.data.items);
     },
     getMaterials: async ({ commit }) => {
       const response = await axios.get(`${url.urlPart}materials`);
@@ -67,6 +80,10 @@ export default createStore({
     getSeasons: async ({ commit }) => {
       const response = await axios.get(`${url.urlPart}seasons`);
       commit('setSeasons', response.data.items);
+    },
+    getColors: async ({ commit }) => {
+      const response = await axios.get(`${url.urlPart}colors`);
+      commit('setColors', response.data.items);
     },
   },
 });

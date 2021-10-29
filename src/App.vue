@@ -159,7 +159,9 @@
 
   <Header />
 
-  <main-page></main-page>
+  <router-view />
+
+  <!-- <main-page></main-page> -->
 
   <!-- <footer class="footer container">
     <div class="footer__wrapper">
@@ -326,13 +328,13 @@
 import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import Header from '@/components/Header/MainLayout.vue';
-import MainPage from '@/pages/MainPage.vue';
+// import MainPage from '@/pages/MainPage.vue';
 
 export default defineComponent({
-  components: { Header, MainPage },
+  components: { Header },
   setup() {
     const store = useStore();
-    store.dispatch('getProductsQuantity');
+    store.dispatch('getProducts');
 
     if (localStorage.getItem('accessKey')) {
       store.commit('setAccessKey', localStorage.getItem('accessKey'));
