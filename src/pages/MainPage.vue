@@ -904,13 +904,18 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
+import { useStore } from 'vuex';
 import Filters from '@/components/Body/Filters.vue';
 
 export default defineComponent({
   components: { Filters },
   setup() {
+    const store = useStore();
 
+    return {
+      productsQty: computed(() => store.getters.getProductsQty || 0),
+    };
   },
 });
 </script>

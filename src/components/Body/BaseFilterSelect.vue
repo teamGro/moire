@@ -12,12 +12,12 @@
             class="check-list__check sr-only"
             type="checkbox"
             :name="el.type"
-            :value="el.title"
+            :value="el.id"
             :code="el.code"
           >
           <span class="check-list__desc">
-            лен
-            <span>(3)</span>
+            {{ el.title }}
+            <span>({{ el.productsCount }})</span>
           </span>
         </label>
       </li>

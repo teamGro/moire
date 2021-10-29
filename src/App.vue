@@ -323,7 +323,7 @@
 </template>
 
 <script>
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import Header from '@/components/Header/MainLayout.vue';
 import MainPage from '@/pages/MainPage.vue';
@@ -332,6 +332,7 @@ export default defineComponent({
   components: { Header, MainPage },
   setup() {
     const store = useStore();
+    store.dispatch('getProductsQuantity');
 
     if (localStorage.getItem('accessKey')) {
       store.commit('setAccessKey', localStorage.getItem('accessKey'));
@@ -339,12 +340,7 @@ export default defineComponent({
       store.dispatch('getAccessKey');
     }
 
-    store.dispatch('getProductsQuantity');
-    // store.dispatch('getMaterials');
-    // store.dispatch('getSeasons');
-
     return {
-      productsQty: computed(() => store.getters.getProductsQty),
     };
   },
 });
