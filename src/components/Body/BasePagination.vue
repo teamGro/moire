@@ -2,8 +2,10 @@
   <ul class="catalog__pagination pagination">
     <li class="pagination__item">
       <a
-        class="pagination__link pagination__link--arrow pagination__link--disabled"
+        class="pagination__link pagination__link--arrow"
+        :class="{'pagination__link--disabled': page === 1}"
         aria-label="Предыдущая страница"
+        @click.prevent="onPrevPage"
       >
         <svg
           width="8"
@@ -18,6 +20,7 @@
       class="pagination__item"
       v-for="pageNum in pages"
       :key="pageNum"
+      @click="onPage(pageNum)"
     >
       <a
         class="pagination__link"
@@ -29,9 +32,11 @@
     <li class="pagination__item">
       <a
         class="pagination__link pagination__link--arrow"
-        href="#"
+        :class="{'pagination__link--disabled': page === pages}"
         aria-label="Следующая страница"
+        @click.prevent="onNextPage"
       >
+        <!-- href="#" -->
         <svg
           width="8"
           height="14"
@@ -49,11 +54,28 @@ import { defineComponent, computed } from 'vue';
 
 export default defineComponent({
   props: ['page', 'productsPerPage', 'count'],
-  setup(props) {
+  setup(props, context) {
     const pages = computed(() => Math.ceil(props.count / props.productsPerPage));
+
+    const onNextPage = () => {
+      const currentPage = props.page + 1;
+      context.emit('update:page', currentPage);
+    };
+
+    const onPrevPage = () => {
+      const currentPage = props.page - 1;
+      context.emit('update:page', currentPage);
+    };
+
+    const onPage = (pageNumber) => {
+      context.emit('update:page', pageNumber);
+    };
 
     return {
       pages,
+      onNextPage,
+      onPrevPage,
+      onPage,
     };
   },
 });

@@ -5,7 +5,7 @@
       href="#"
     >
       <img
-        :src="product.image.gallery[0].file.url"
+        :src="product.image"
         :alt="product.title"
       >
     </a>
@@ -50,8 +50,6 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: ['product'],
-  setup() {
-
-  },
+  setup() {},
 });
 </script>

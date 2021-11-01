@@ -30,7 +30,9 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from 'vue';
+import {
+  defineComponent, computed, ref, watch,
+} from 'vue';
 import { useStore } from 'vuex';
 import Filters from '@/components/Body/Filters.vue';
 import ProductList from '@/components/Body/ProductList.vue';
@@ -44,7 +46,10 @@ export default defineComponent({
     const productsPerPage = ref(6);
 
     store.dispatch('getProducts', { page: page.value, productsPerPage: productsPerPage.value });
-    store.dispatch('getProductsQty');
+
+    watch(page, (value) => {
+      store.dispatch('getProducts', { page: value, productsPerPage: productsPerPage.value });
+    });
 
     return {
       productsQty: computed(() => store.state.productsQty || 0),

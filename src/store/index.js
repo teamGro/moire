@@ -23,10 +23,18 @@ export default createStore({
       return state.products.length;
     },
     getProducts(state) {
-      return state.products.map((product) => ({
-        ...product,
-        image: product.colors[0],
-      }));
+      return state.products.map((product) => {
+        let image = null;
+        if (product.colors?.length && product.colors[0].gallery?.length) {
+          image = product.colors[0].gallery[0].file.url;
+        } else {
+          console.log(product.colors);
+        }
+        return {
+          ...product,
+          image,
+        };
+      });
     },
     getColors(state) {
       return state.colors;
@@ -82,12 +90,7 @@ export default createStore({
         },
       });
       commit('setProducts', response.data.items);
-    },
-    getProductsQty: async ({ commit }) => {
-      const response = await axios(`${url.urlPart}products`, {
-        method: 'GET',
-      });
-      commit('setProductsQty', response.data.items.length || 0);
+      commit('setProductsQty', response.data.pagination.total);
     },
     getMaterials: async ({ commit }) => {
       const response = await axios.get(`${url.urlPart}materials`);
