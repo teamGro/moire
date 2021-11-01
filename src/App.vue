@@ -334,7 +334,6 @@ export default defineComponent({
   components: { Header },
   setup() {
     const store = useStore();
-    store.dispatch('getProducts');
 
     if (localStorage.getItem('accessKey')) {
       store.commit('setAccessKey', localStorage.getItem('accessKey'));

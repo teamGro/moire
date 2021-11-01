@@ -10,6 +10,7 @@ export default createStore({
       items: [],
     },
     products: [],
+    productsQty: 0,
     seasons: [],
     materials: [],
     colors: [],
@@ -46,6 +47,9 @@ export default createStore({
     setProducts(state, qty) {
       state.products = qty;
     },
+    setProductsQty(state, qty) {
+      state.productsQty = qty;
+    },
     setMaterials(state, materials) {
       state.materials = materials.map((item) => ({
         ...item,
@@ -69,9 +73,21 @@ export default createStore({
       const response = await axios.get(`${url.urlPart}baskets?userAccessKey=${state.accessKey}`);
       commit('updateBasketAmount', response.data);
     },
-    getProducts: async ({ commit }) => {
-      const response = await axios.get(`${url.urlPart}products`);
+    getProducts: async ({ commit }, payload) => {
+      const response = await axios(`${url.urlPart}products`, {
+        method: 'GET',
+        params: {
+          page: payload.page,
+          limit: payload.productsPerPage,
+        },
+      });
       commit('setProducts', response.data.items);
+    },
+    getProductsQty: async ({ commit }) => {
+      const response = await axios(`${url.urlPart}products`, {
+        method: 'GET',
+      });
+      commit('setProductsQty', response.data.items.length || 0);
     },
     getMaterials: async ({ commit }) => {
       const response = await axios.get(`${url.urlPart}materials`);
