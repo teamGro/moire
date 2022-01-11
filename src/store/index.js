@@ -14,6 +14,7 @@ export default createStore({
     seasons: [],
     materials: [],
     colors: [],
+    categories: [],
   },
   getters: {
     getBasketAmount(state) {
@@ -70,6 +71,9 @@ export default createStore({
     setColors(state, colors) {
       state.colors = colors;
     },
+    setCategories(state, categories) {
+      state.categories = categories;
+    },
   },
   actions: {
     getAccessKey: async ({ commit }) => {
@@ -87,6 +91,12 @@ export default createStore({
         params: {
           page: payload.page,
           limit: payload.productsPerPage,
+          minPrice: payload.minPrice || 0,
+          maxPrice: payload.maxPrice || 0,
+          category: payload.category || 0,
+          colorIds: payload.colorIds || [],
+          seasonIds: payload.seasonIds || [],
+          materialIds: payload.materialIds || [],
         },
       });
       commit('setProducts', response.data.items);
@@ -103,6 +113,10 @@ export default createStore({
     getColors: async ({ commit }) => {
       const response = await axios.get(`${url.urlPart}colors`);
       commit('setColors', response.data.items);
+    },
+    getCategories: async ({ commit }) => {
+      const response = await axios.get(`${url.urlPart}productCategories`);
+      commit('setCategories', response.data.items);
     },
   },
 });

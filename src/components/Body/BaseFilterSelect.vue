@@ -14,6 +14,7 @@
             :name="el.type"
             :value="el.id"
             :code="el.code"
+            @click="updateIds($event, el)"
           >
           <span class="check-list__desc">
             {{ el.title }}
@@ -26,12 +27,30 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 
 export default defineComponent({
-  props: ['title', 'elements'],
-  setup() {
 
+  props: ['title', 'elements', 'ids'],
+  setup(props, ctx) {
+    const materialIds = reactive(props.ids);
+
+    function updateIds(e, item) {
+      let updates = [];
+      if (props.ids.find((elem) => elem === item.id)) {
+        updates = props.ids.filter((elem) => elem !== item.id);
+      } else {
+        updates = props.ids;
+        updates.push(item.id);
+      }
+      ctx.emit('update:ids', updates);
+    }
+
+    return {
+      materialIds,
+
+      updateIds,
+    };
   },
 });
 </script>

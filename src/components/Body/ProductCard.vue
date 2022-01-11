@@ -24,7 +24,7 @@
       <li
         class="colors__item"
         v-for="color in product.colors"
-        :key="color.id"
+        :key="color.color.id"
       >
         <label class="colors__label">
           <input
@@ -36,8 +36,9 @@
           >
           <span
             class="colors__value"
-            :style="{'background-color': color.code}"
+            :style="{'background-color': color.color.code}"
           >
+          <!-- {{color.color}} -->
           </span>
         </label>
       </li>

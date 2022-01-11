@@ -5,6 +5,7 @@
       type="text"
       :name="name"
       :placeholder="placeholder"
+      @input="setPrice($event)"
     >
     <span class="form__value">{{ title }}</span>
   </label>
@@ -14,9 +15,15 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  props: ['name', 'placeholder', 'title'],
-  setup() {
+  props: ['name', 'placeholder', 'title', 'price'],
+  setup(props, ctx) {
+    function setPrice(e) {
+      ctx.emit('update:price', e.target.value);
+    }
 
+    return {
+      setPrice,
+    };
   },
 });
 </script>

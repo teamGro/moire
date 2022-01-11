@@ -6,6 +6,8 @@
         class="colors-list__item"
         v-for="color in colors"
         :key="color.id"
+        :class="{'colors-list__item--active':
+        colorIds.find((item) => item === color.id)}"
       >
         <label class="colors-list__label">
           <input
@@ -16,6 +18,7 @@
           <span
             class="colors-list__value"
             v-bind:style="{'background-color': color.code}"
+            @click="updateColorState($event, color)"
           ></span>
         </label>
       </li>
@@ -27,9 +30,22 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  props: ['colors', 'title'],
-  setup() {
+  props: ['colors', 'title', 'colorIds'],
+  setup(props, ctx) {
+    function updateColorState(e, color) {
+      let updColors = [];
+      if (props.colorIds.find((item) => item === color.id)) {
+        updColors = props.colorIds.filter((item) => item !== color.id);
+      } else {
+        updColors = props.colorIds;
+        updColors.push(color.id);
+      }
+      ctx.emit('update:colorIds', updColors);
+    }
 
+    return {
+      updateColorState,
+    };
   },
 });
 </script>
@@ -54,6 +70,10 @@ export default defineComponent({
     }
 
     &:hover {
+      border: 1px solid #000;
+    }
+
+    &--active {
       border: 1px solid #000;
     }
   }
