@@ -10,6 +10,7 @@ export default createStore({
       items: [],
     },
     products: [],
+    product: [],
     productsQty: 0,
     seasons: [],
     materials: [],
@@ -53,8 +54,17 @@ export default createStore({
         state.basket.id = data.id;
       }
     },
-    setProducts(state, qty) {
-      state.products = qty;
+    setProducts(state, products) {
+      state.products = products;
+    },
+    saveProduct(state, product) {
+      const normalizeProduct = { ...product };
+      if (product.colors?.length && product.colors[0].gallery?.length) {
+        normalizeProduct.img = product.colors[0].gallery[0].file.url;
+      } else {
+        console.log(product.colors);
+      }
+      state.product = normalizeProduct;
     },
     setProductsQty(state, qty) {
       state.productsQty = qty;
@@ -101,6 +111,10 @@ export default createStore({
       });
       commit('setProducts', response.data.items);
       commit('setProductsQty', response.data.pagination.total);
+    },
+    getProduct: async ({ commit }, productId) => {
+      const response = await axios.get(`${url.urlPart}products/${productId}`);
+      commit('saveProduct', response.data);
     },
     getMaterials: async ({ commit }) => {
       const response = await axios.get(`${url.urlPart}materials`);

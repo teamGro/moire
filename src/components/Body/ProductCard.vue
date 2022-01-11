@@ -1,14 +1,11 @@
 <template>
   <li class="catalog__item">
-    <a
-      class="catalog__pic"
-      href="#"
-    >
+    <router-link class="catalog__pic" :to="{name: 'Product', params: {id: product.id}}">
       <img
         :src="product.image"
         :alt="product.title"
       >
-    </a>
+    </router-link>
 
     <h3 class="catalog__title">
       <a href="#">
