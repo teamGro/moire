@@ -79,8 +79,9 @@
                     class="options__radio sr-only"
                     type="radio"
                     name="delivery"
-                    value="0"
+                    value="1"
                     checked=""
+                    v-model="userData.deliveryTypeId"
                   />
                   <span class="options__value">
                     Самовывоз <b>бесплатно</b>
@@ -93,7 +94,8 @@
                     class="options__radio sr-only"
                     type="radio"
                     name="delivery"
-                    value="500"
+                    value="2"
+                    v-model="userData.deliveryTypeId"
                   />
                   <span class="options__value"> Курьером <b>290 ₽</b> </span>
                 </label>
@@ -108,8 +110,9 @@
                     class="options__radio sr-only"
                     type="radio"
                     name="pay"
-                    value="card"
+                    value="1"
                     checked=""
+                    v-model="userData.paymentTypeId"
                   />
                   <span class="options__value"> Картой при получении </span>
                 </label>
@@ -119,8 +122,9 @@
                   <input
                     class="options__radio sr-only"
                     type="radio"
-                    name="pay"
+                    name="2"
                     value="cash"
+                    v-model="userData.paymentTypeId"
                   />
                   <span class="options__value"> Наличными при получении </span>
                 </label>
@@ -174,6 +178,7 @@ import {
   computed, defineComponent, reactive, ref,
 } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 import formatNumber from '@/helpers/formatNumber';
 import OrderInput from '../components/OrderForm/OrderInput.vue';
@@ -184,6 +189,7 @@ export default defineComponent({
   components: { OrderInput, OrderTextarea },
   setup() {
     const store = useStore();
+    const router = useRouter();
     const products = computed(() => store.getters.getBasketItems);
     const userData = reactive({});
     const errors = ref({});
@@ -200,14 +206,13 @@ export default defineComponent({
       errorMessage.value = '';
       axios
         .post(`${url.urlPart}orders?userAccessKey=${accessKey.value}`, {
-          userData,
+          ...userData,
         })
-        .then((response) => {
-          console.log(response);
+        .then(() => {
+          router.push({ name: 'OrderInfo' });
         })
         .catch((err) => {
           errors.value = err.response.data.error.request || {};
-          console.log(err.response.data.error);
           errorMessage.value = 'Похоже произошла ошибка. Попробуйте отправить снова или перезагрузите страницу.';
         });
     }
