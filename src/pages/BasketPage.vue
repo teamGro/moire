@@ -71,9 +71,13 @@
             Итого: <span>{{ calculateTotalPrice() }} ₽</span>
           </p>
 
-          <button class="cart__button button button--primery" type="submit">
+          <router-link
+            tag="button"
+            class="cart__button button button--primery"
+            :to="{ name: 'Order' }"
+          >
             Оформить заказ
-          </button>
+          </router-link>
         </div>
       </form>
     </section>
