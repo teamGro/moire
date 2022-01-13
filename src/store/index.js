@@ -21,6 +21,26 @@ export default createStore({
     getBasketAmount(state) {
       return state.basket.items.length;
     },
+    getBasketItems(state) {
+      return state.basket.items.map((item) => {
+        let image = null;
+        const { product } = item;
+        if (product.colors?.length && product.colors[0].gallery?.length) {
+          image = product.colors[0].gallery[0].file.url;
+        } else {
+          console.log(product.colors);
+        }
+        return {
+          id: item.id,
+          size: item.size,
+          color: item.color,
+          quantity: item.quantity,
+          price: item.price,
+          image,
+          title: product.title,
+        };
+      });
+    },
     getProductsQty(state) {
       return state.products.length;
     },
@@ -47,12 +67,17 @@ export default createStore({
       state.accessKey = key;
     },
     updateBasketAmount(state, data) {
-      if (state.basket.items.length) {
-        state.basket.items.push(data);
-      } else {
-        state.basket.items = data.item || [];
-        state.basket.id = data.id;
-      }
+      state.basket.items = data.items;
+    },
+    setBasketState(state, data) {
+      state.basket.items = data.items || [];
+      state.basket.id = data.id;
+    },
+    deleteProductFromBasket(state, basketInfo) {
+      state.basket = basketInfo;
+    },
+    updateProductQtyInBasket(state, data) {
+      state.basket = data;
     },
     setProducts(state, products) {
       state.products = products;
@@ -93,7 +118,29 @@ export default createStore({
     },
     getBasketAmount: async ({ state, commit }) => {
       const response = await axios.get(`${url.urlPart}baskets?userAccessKey=${state.accessKey}`);
+      commit('setBasketState', response.data);
+    },
+    updateBasketAmount: async ({ state, commit }, product) => {
+      const response = await axios.post(`${url.urlPart}baskets/products?userAccessKey=${state.accessKey}`, {
+        productId: product.id,
+        colorId: product.colorId,
+        sizeId: product.sizeId,
+        quantity: product.qty,
+      });
       commit('updateBasketAmount', response.data);
+    },
+    updateProductQtyInBasket: async ({ state, commit }, payload) => {
+      const response = await axios.put(`${url.urlPart}baskets/products?userAccessKey=${state.accessKey}`, {
+        basketItemId: payload.id,
+        quantity: payload.qty,
+      });
+
+      commit('updateProductQtyInBasket', response.data);
+    },
+    deleteProductFromBasket: async ({ state, commit }, id) => {
+      console.log(id);
+      const response = await axios.delete(`${url.urlPart}baskets/products?userAccessKey=${state.accessKey}`, { data: { basketItemId: id } });
+      commit('deleteProductFromBasket', response.data);
     },
     getProducts: async ({ commit }, payload) => {
       const response = await axios(`${url.urlPart}products`, {

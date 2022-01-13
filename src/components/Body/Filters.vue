@@ -1,9 +1,6 @@
 <template>
   <aside class="filter">
-    <form
-      autocomplete="off"
-      class="filter__form form"
-    >
+    <form autocomplete="off" class="filter__form form">
       <fieldset class="form__block">
         <legend class="form__legend">Цена</legend>
 
@@ -25,7 +22,8 @@
       <base-filter-categories
         title="Категория"
         :categories="categories"
-        v-model:category="currentCategory">
+        v-model:category="currentCategory"
+      >
       </base-filter-categories>
 
       <color-filter
@@ -35,13 +33,13 @@
       ></color-filter>
 
       <base-filter-select
-        title='Материал'
+        title="Материал"
         :elements="materials"
         v-model:ids="materialIds"
       ></base-filter-select>
 
       <base-filter-select
-        title='Коллекция'
+        title="Коллекция"
         :elements="seasons"
         v-model:ids="seasonIds"
       ></base-filter-select>
@@ -76,7 +74,10 @@ import BaseFilterCategories from '@/components/Body/BaseFilterCategories.vue';
 
 export default defineComponent({
   components: {
-    BaseFilterInput, BaseFilterSelect, ColorFilter, BaseFilterCategories,
+    BaseFilterInput,
+    BaseFilterSelect,
+    ColorFilter,
+    BaseFilterCategories,
   },
   setup() {
     const store = useStore();
@@ -115,6 +116,10 @@ export default defineComponent({
       minPrice.value = 0;
       maxPrice.value = 0;
       currentCategory.value = 0;
+      colorIds.value = [];
+      seasonIds.value = [];
+      materialIds.value = [];
+
       store.dispatch('getProducts', {
         page: page.value,
         productsPerPage: productsPerPage.value,

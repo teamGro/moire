@@ -1,7 +1,7 @@
 <template>
-  <a
+  <router-link
     class="header__cart"
-    href="cart.html"
+    :to="{name: 'Basket'}"
     aria-label="Корзина с товарами"
   >
     <svg
@@ -14,7 +14,7 @@
       class="header__count"
       aria-label="Количество товаров"
     >{{ basketAmount || 0 }}</span>
-  </a>
+  </router-link>
 </template>
 
 <script>
