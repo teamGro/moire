@@ -16,6 +16,7 @@ export default createStore({
     materials: [],
     colors: [],
     categories: [],
+    orderInfo: null,
   },
   getters: {
     getBasketAmount(state) {
@@ -109,6 +110,9 @@ export default createStore({
     setCategories(state, categories) {
       state.categories = categories;
     },
+    saveOrderInfo(state, info) {
+      state.orderInfo = info;
+    },
   },
   actions: {
     getAccessKey: async ({ commit }) => {
@@ -179,6 +183,11 @@ export default createStore({
     getCategories: async ({ commit }) => {
       const response = await axios.get(`${url.urlPart}productCategories`);
       commit('setCategories', response.data.items);
+    },
+    getOrderInfo: async ({ state, commit }, id) => {
+      const response = await axios.get(`${url.urlPart}orders/${id}`,
+        { params: { userAccessKey: state.accessKey } });
+      commit('saveOrderInfo', response.data);
     },
   },
 });

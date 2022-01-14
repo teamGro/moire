@@ -211,8 +211,9 @@ export default defineComponent({
         .post(`${url.urlPart}orders?userAccessKey=${accessKey.value}`, {
           ...userData,
         })
-        .then(() => {
-          router.push({ name: 'OrderInfo' });
+        .then((response) => {
+          store.commit('saveOrderInfo', response.data);
+          router.push({ name: 'OrderInfo', params: { id: response.data.id } });
         })
         .catch((err) => {
           errors.value = err.response.data.error.request || {};
