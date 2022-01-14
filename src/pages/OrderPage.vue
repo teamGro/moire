@@ -122,8 +122,8 @@
                   <input
                     class="options__radio sr-only"
                     type="radio"
-                    name="2"
-                    value="cash"
+                    name="cash"
+                    value="2"
                     v-model="userData.paymentTypeId"
                   />
                   <span class="options__value"> Наличными при получении </span>
@@ -191,7 +191,10 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const products = computed(() => store.getters.getBasketItems);
-    const userData = reactive({});
+    const userData = reactive({
+      deliveryTypeId: 1,
+      paymentTypeId: 1,
+    });
     const errors = ref({});
     const errorMessage = ref('');
     const accessKey = computed(() => store.state.accessKey);

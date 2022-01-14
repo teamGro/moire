@@ -68,7 +68,7 @@
             Мы&nbsp;посчитаем стоимость доставки на&nbsp;следующем этапе
           </p>
           <p class="cart__price">
-            Итого: <span>{{ calculateTotalPrice() }} ₽</span>
+            Итого: <span>{{ calculateTotalPrice }} ₽</span>
           </p>
 
           <router-link
@@ -88,21 +88,17 @@
 import { computed, defineComponent } from 'vue';
 import { useStore } from 'vuex';
 import ProductChangeQty from '@/components/ProductChangeQty.vue';
+import formatNumber from '@/helpers/formatNumber';
 
 export default defineComponent({
   components: { ProductChangeQty },
   setup() {
     const store = useStore();
     const basketItems = computed(() => store.getters.getBasketItems);
-
-    function calculateTotalPrice() {
-      let totalPrice = 0;
-      basketItems.value.forEach((item) => {
-        totalPrice += item.price;
-      });
-
-      return totalPrice;
-    }
+    const calculateTotalPrice = computed(() => {
+      const total = basketItems.value.reduce((sum, cur) => cur.price * cur.quantity + sum, 0);
+      return formatNumber(total);
+    });
 
     function deleteProduct(e, id) {
       store.dispatch('deleteProductFromBasket', id);

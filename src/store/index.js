@@ -139,7 +139,8 @@ export default createStore({
     },
     deleteProductFromBasket: async ({ state, commit }, id) => {
       console.log(id);
-      const response = await axios.delete(`${url.urlPart}baskets/products?userAccessKey=${state.accessKey}`, { data: { basketItemId: id } });
+      const response = await axios.delete(`${url.urlPart}baskets/products?userAccessKey=${state.accessKey}`,
+        { data: { basketItemId: id } });
       commit('deleteProductFromBasket', response.data);
     },
     getProducts: async ({ commit }, payload) => {
