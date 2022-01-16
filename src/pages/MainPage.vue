@@ -2,21 +2,15 @@
   <main class="content container">
     <div class="content__top">
       <div class="content__row">
-        <h1 class="content__title">
-          Каталог
-        </h1>
-        <span class="content__info">
-          {{ productsQty }} товара
-        </span>
+        <h1 class="content__title">Каталог</h1>
+        <span class="content__info"> {{ productsQty }} товара </span>
       </div>
     </div>
 
     <div class="content__catalog">
-
-      <filters></filters>
+      <filters v-model:page="page"></filters>
 
       <section class="catalog">
-
         <product-list></product-list>
 
         <base-pagination
@@ -43,18 +37,19 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const page = ref(1);
-    const productsPerPage = ref(6);
+    const filters = computed(() => store.state.filters);
 
-    store.dispatch('getProducts', { page: page.value, productsPerPage: productsPerPage.value });
+    store.dispatch('getProducts', filters);
 
     watch(page, (value) => {
-      store.dispatch('getProducts', { page: value, productsPerPage: productsPerPage.value });
+      store.commit('updateFilters', { page: value });
+      store.dispatch('getProducts', filters);
     });
 
     return {
       productsQty: computed(() => store.state.productsQty || 0),
       page,
-      productsPerPage,
+      productsPerPage: filters.value.limit,
     };
   },
 });

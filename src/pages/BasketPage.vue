@@ -71,13 +71,17 @@
             Итого: <span>{{ calculateTotalPrice }} ₽</span>
           </p>
 
-          <router-link
+          <a
             tag="button"
             class="cart__button button button--primery"
-            :to="{ name: 'Order' }"
+            @click.prevent="goToOrder"
           >
             Оформить заказ
-          </router-link>
+          </a>
+        </div>
+        <div class="cart__error form__error-block" v-if="basketError">
+          <h4>Оформление заказа невозможно!</h4>
+          <p>Корзина пуста!</p>
         </div>
       </form>
     </section>
@@ -85,8 +89,9 @@
 </template>
 
 <script>
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import ProductChangeQty from '@/components/ProductChangeQty.vue';
 import formatNumber from '@/helpers/formatNumber';
 
@@ -94,7 +99,10 @@ export default defineComponent({
   components: { ProductChangeQty },
   setup() {
     const store = useStore();
+    const router = useRouter();
     const basketItems = computed(() => store.getters.getBasketItems);
+    const basketError = ref(false);
+
     const calculateTotalPrice = computed(() => {
       const total = basketItems.value.reduce((sum, cur) => cur.price * cur.quantity + sum, 0);
       return formatNumber(total);
@@ -104,10 +112,21 @@ export default defineComponent({
       store.dispatch('deleteProductFromBasket', id);
     }
 
+    function goToOrder() {
+      if (!store.state.basket.items.length) {
+        basketError.value = true;
+        return;
+      }
+      router.push({ name: 'Order' });
+      basketError.value = false;
+    }
+
     return {
       basketItems,
       calculateTotalPrice,
+      basketError,
       deleteProduct,
+      goToOrder,
     };
   },
 });

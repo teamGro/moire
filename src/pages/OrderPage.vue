@@ -214,6 +214,7 @@ export default defineComponent({
         .then((response) => {
           store.commit('saveOrderInfo', response.data);
           router.push({ name: 'OrderInfo', params: { id: response.data.id } });
+          store.commit('cleanBasket');
         })
         .catch((err) => {
           errors.value = err.response.data.error.request || {};

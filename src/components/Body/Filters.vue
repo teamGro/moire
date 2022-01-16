@@ -63,9 +63,7 @@
 </template>
 
 <script>
-import {
-  defineComponent, reactive, computed, ref,
-} from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import { useStore } from 'vuex';
 import BaseFilterInput from '@/components/Body/BaseFilterInput.vue';
 import BaseFilterSelect from '@/components/Body/BaseFilterSelect.vue';
@@ -79,20 +77,19 @@ export default defineComponent({
     ColorFilter,
     BaseFilterCategories,
   },
-  setup() {
+  props: ['page'],
+  setup(props, ctx) {
     const store = useStore();
-    const filtersData = reactive({});
-    const page = ref(1);
-    const productsPerPage = ref(6);
+    const filters = computed(() => store.state.filters);
 
-    const minPrice = ref(0);
-    const maxPrice = ref(0);
+    const minPrice = ref(filters.value.minPrice || 0);
+    const maxPrice = ref(filters.value.minPrice || 0);
 
-    const currentCategory = ref(0);
+    const currentCategory = ref(filters.value.minPrice || 0);
 
-    const colorIds = ref([]);
-    const seasonIds = ref([]);
-    const materialIds = ref([]);
+    const colorIds = ref(filters.value.minPrice || []);
+    const seasonIds = ref(filters.value.minPrice || []);
+    const materialIds = ref(filters.value.minPrice || []);
 
     store.dispatch('getMaterials');
     store.dispatch('getSeasons');
@@ -100,9 +97,7 @@ export default defineComponent({
     store.dispatch('getCategories');
 
     function applyFilters() {
-      store.dispatch('getProducts', {
-        page: page.value,
-        productsPerPage: productsPerPage.value,
+      store.commit('updateFilters', {
         minPrice: minPrice.value,
         maxPrice: maxPrice.value,
         category: currentCategory.value,
@@ -110,6 +105,7 @@ export default defineComponent({
         materialIds: materialIds.value,
         seasonIds: seasonIds.value,
       });
+      store.dispatch('getProducts', filters);
     }
 
     function resetFilters() {
@@ -120,20 +116,26 @@ export default defineComponent({
       seasonIds.value = [];
       materialIds.value = [];
 
-      store.dispatch('getProducts', {
-        page: page.value,
-        productsPerPage: productsPerPage.value,
+      store.commit('updateFilters', {
+        page: 1,
+        limit: 6,
         minPrice: minPrice.value,
         maxPrice: maxPrice.value,
         category: currentCategory.value,
+        colorIds: colorIds.value,
+        materialIds: materialIds.value,
+        seasonIds: seasonIds.value,
       });
+
+      ctx.emit('update:page', 1);
+
+      store.dispatch('getProducts', filters);
     }
 
     return {
       minPrice,
       maxPrice,
       currentCategory,
-      filtersData,
       colorIds,
       seasonIds,
       materialIds,

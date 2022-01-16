@@ -3,15 +3,11 @@
     <li class="pagination__item">
       <a
         class="pagination__link pagination__link--arrow"
-        :class="{'pagination__link--disabled': page === 1}"
+        :class="{ 'pagination__link--disabled': page === 1 }"
         aria-label="Предыдущая страница"
         @click.prevent="onPrevPage"
       >
-        <svg
-          width="8"
-          height="14"
-          fill="currentColor"
-        >
+        <svg width="8" height="14" fill="currentColor">
           <use xlink:href="#icon-arrow-left"></use>
         </svg>
       </a>
@@ -24,7 +20,7 @@
     >
       <a
         class="pagination__link"
-        :class="{'pagination__link--current': pageNum === page}"
+        :class="{ 'pagination__link--current': pageNum === page }"
       >
         {{ pageNum }}
       </a>
@@ -32,16 +28,12 @@
     <li class="pagination__item">
       <a
         class="pagination__link pagination__link--arrow"
-        :class="{'pagination__link--disabled': page === pages}"
+        :class="{ 'pagination__link--disabled': page === pages }"
         aria-label="Следующая страница"
         @click.prevent="onNextPage"
       >
         <!-- href="#" -->
-        <svg
-          width="8"
-          height="14"
-          fill="currentColor"
-        >
+        <svg width="8" height="14" fill="currentColor">
           <use xlink:href="#icon-arrow-right"></use>
         </svg>
       </a>
@@ -58,11 +50,13 @@ export default defineComponent({
     const pages = computed(() => Math.ceil(props.count / props.productsPerPage));
 
     const onNextPage = () => {
+      if (props.page === pages.value) return;
       const currentPage = props.page + 1;
       context.emit('update:page', currentPage);
     };
 
     const onPrevPage = () => {
+      if (props.page === 1) return;
       const currentPage = props.page - 1;
       context.emit('update:page', currentPage);
     };

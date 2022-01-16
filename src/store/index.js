@@ -17,6 +17,10 @@ export default createStore({
     colors: [],
     categories: [],
     orderInfo: null,
+    filters: {
+      limit: 6,
+      page: 1,
+    },
   },
   getters: {
     getBasketAmount(state) {
@@ -80,6 +84,12 @@ export default createStore({
     updateProductQtyInBasket(state, data) {
       state.basket = data;
     },
+    cleanBasket(state) {
+      state.basket = {
+        id: null,
+        items: [],
+      };
+    },
     setProducts(state, products) {
       state.products = products;
     },
@@ -113,6 +123,9 @@ export default createStore({
     saveOrderInfo(state, info) {
       state.orderInfo = info;
     },
+    updateFilters(state, filters) {
+      state.filters = Object.assign(state.filters, filters);
+    },
   },
   actions: {
     getAccessKey: async ({ commit }) => {
@@ -142,23 +155,15 @@ export default createStore({
       commit('updateProductQtyInBasket', response.data);
     },
     deleteProductFromBasket: async ({ state, commit }, id) => {
-      console.log(id);
       const response = await axios.delete(`${url.urlPart}baskets/products?userAccessKey=${state.accessKey}`,
         { data: { basketItemId: id } });
       commit('deleteProductFromBasket', response.data);
     },
-    getProducts: async ({ commit }, payload) => {
+    getProducts: async ({ state, commit }) => {
       const response = await axios(`${url.urlPart}products`, {
         method: 'GET',
         params: {
-          page: payload.page,
-          limit: payload.productsPerPage,
-          minPrice: payload.minPrice || 0,
-          maxPrice: payload.maxPrice || 0,
-          category: payload.category || 0,
-          colorIds: payload.colorIds || [],
-          seasonIds: payload.seasonIds || [],
-          materialIds: payload.materialIds || [],
+          ...state.filters,
         },
       });
       commit('setProducts', response.data.items);
